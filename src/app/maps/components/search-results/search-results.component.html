@@ -12,7 +12,8 @@
         <h6>{{ place.text }}</h6>
         <p>{{ place.place_name }}</p>
         <button class="btn btn-sm "
-                [ngClass]="!(place.id === selectedId)?'btn-outline-primary':'btn-outline-light'">
+                (click)="getDirections( place )"
+                [ngClass]="!(place.id === selectedId)?'btn-outline-primary':'btn-outline-light'" >
             Direcciones
         </button>
     </li>

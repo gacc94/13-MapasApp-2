@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Feature, PlacesResponse} from "../interfaces/places.interface";
 import {PlacesApiClient} from "../api/placesApiClient";
+import {MapService} from "./map.service";
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ export class PlacesService {
     }
     constructor(
         private placesApi: PlacesApiClient,
+        private mapService: MapService,
     ) {
         this.getUserLocation();
     }
@@ -35,13 +37,13 @@ export class PlacesService {
             );
         })
     }
-    getPlacesByQuery( query: string=''){
+
+    public getPlacesByQuery( query: string=''){
         if( query.length === 0) {
             this.places = [];
             this.isLoadingPlaces = false;
             return ;
         }
-
         this.isLoadingPlaces = true;
         if( !this.useLocation ) throw new Error('No hay userLocation');
 
@@ -50,11 +52,14 @@ export class PlacesService {
         })
             .subscribe({
                 next: value => {
-                    console.log(value.features)
-
                     this.isLoadingPlaces= false;
                     this.places = value.features;
+                    this.mapService.createMarkersFromPlaces( this.places, this.useLocation!);
                 }
             });
+    }
+
+    public deletePlaces(){
+        this.places = [];
     }
 }

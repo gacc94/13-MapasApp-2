@@ -20,9 +20,20 @@ export class SearchResultsComponent {
         return this.placesService.places;
     }
     flyTo( place:Feature ){
-        this.selectedId =place.id;
+        this.selectedId = place.id;
 
         const [lng, lat]= place.center;
         this.mapService.flyTo([lng, lat])
+    }
+    getDirections(place:Feature){
+
+        if(!this.placesService.useLocation) throw Error('No hay userLocation');
+
+        this.placesService.deletePlaces();
+
+        const start = this.placesService.useLocation!;
+        const end = place.center as [number, number];
+
+        this.mapService.getRouteBetweenPoints(start, end);
     }
 }
